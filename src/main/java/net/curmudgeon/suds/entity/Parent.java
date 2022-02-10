@@ -19,8 +19,8 @@ public class Parent {
 	
 	public Parent() { }
 
-    @DynamoDbPartitionKey
-    public String getCustomerId() {
+	@DynamoDbPartitionKey
+	public String getCustomerId() {
 		return customerId;
 	}
 
@@ -28,7 +28,7 @@ public class Parent {
 		this.customerId = customerId;
 	}
 
-    @DynamoDbSortKey
+	@DynamoDbSortKey
 	public String getId() {
 		return id;
 	}
