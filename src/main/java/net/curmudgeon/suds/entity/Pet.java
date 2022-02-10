@@ -16,7 +16,7 @@ public class Pet {
 	
 	public Pet() { }
 
-    @DynamoDbPartitionKey
+	@DynamoDbPartitionKey
 	public String getCustomerId() {
 		return customerId;
 	}
@@ -25,7 +25,7 @@ public class Pet {
 		this.customerId = customerId;
 	}
 
-    @DynamoDbSortKey
+	@DynamoDbSortKey
 	public String getId() {
 		return id;
 	}

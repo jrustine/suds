@@ -113,11 +113,11 @@ public class CustomerRepositoryIntegrationTest {
 		
 		Parent result = parentTable.getItem(key);
 		
-        assertNotNull(result);
-        assertEquals(result.getAddress().size(), 4, ()->"address size of " + result.getAddress().size() + " does not equal 4");
-        assertEquals(result.getFirstName(), parent.getFirstName(), ()->"first name " + result.getFirstName() + " is not " + parent.getFirstName());
-        assertEquals(result.getLastName(), parent.getLastName(), ()->"last name " + result.getLastName() + " is not " + parent.getLastName());
-        assertEquals(result.getPhoneNumber(), parent.getPhoneNumber(), ()->"phone number " + result.getPhoneNumber() + " is not " + parent.getPhoneNumber());
+		assertNotNull(result);
+		assertEquals(result.getAddress().size(), 4, ()->"address size of " + result.getAddress().size() + " does not equal 4");
+		assertEquals(result.getFirstName(), parent.getFirstName(), ()->"first name " + result.getFirstName() + " is not " + parent.getFirstName());
+		assertEquals(result.getLastName(), parent.getLastName(), ()->"last name " + result.getLastName() + " is not " + parent.getLastName());
+		assertEquals(result.getPhoneNumber(), parent.getPhoneNumber(), ()->"phone number " + result.getPhoneNumber() + " is not " + parent.getPhoneNumber());
 
 		Key anotherKey = Key.builder()
                 .partitionValue("CUSTOMER#"+PHONE2)
@@ -126,11 +126,11 @@ public class CustomerRepositoryIntegrationTest {
 		
 		Parent anotherResult = parentTable.getItem(anotherKey);
 		
-        assertNotNull(anotherResult);
-        assertEquals(anotherResult.getAddress().size(), 4, ()->"address size of " + anotherResult.getAddress().size() + " does not equal 4");
-        assertEquals(anotherResult.getFirstName(), anotherParent.getFirstName(), ()->"first name " + anotherResult.getFirstName() + " is not " + anotherParent.getFirstName());
-        assertEquals(anotherResult.getLastName(), anotherParent.getLastName(), ()->"last name " + anotherResult.getLastName() + " is not " + anotherParent.getLastName());
-        assertEquals(anotherResult.getPhoneNumber(), anotherParent.getPhoneNumber(), ()->"phone number " + anotherResult.getPhoneNumber() + " is not " + anotherParent.getPhoneNumber());
+		assertNotNull(anotherResult);
+		assertEquals(anotherResult.getAddress().size(), 4, ()->"address size of " + anotherResult.getAddress().size() + " does not equal 4");
+		assertEquals(anotherResult.getFirstName(), anotherParent.getFirstName(), ()->"first name " + anotherResult.getFirstName() + " is not " + anotherParent.getFirstName());
+		assertEquals(anotherResult.getLastName(), anotherParent.getLastName(), ()->"last name " + anotherResult.getLastName() + " is not " + anotherParent.getLastName());
+		assertEquals(anotherResult.getPhoneNumber(), anotherParent.getPhoneNumber(), ()->"phone number " + anotherResult.getPhoneNumber() + " is not " + anotherParent.getPhoneNumber());
 	}
 	
 	@Test
@@ -172,10 +172,10 @@ public class CustomerRepositoryIntegrationTest {
 		
 		Pet result = petTable.getItem(key);
 		
-        assertNotNull(result);
-        assertEquals(result.getName(), pet.getName(), ()->"name of " + result.getName() + " does not equal " + pet.getName());
-        assertEquals(result.getType(), pet.getType(), ()->"type of " + result.getType() + " does not equal " + pet.getType());
-        assertEquals(result.getNotes(), pet.getNotes(), ()->"name of " + result.getNotes() + " does not equal " + pet.getNotes());
+		assertNotNull(result);
+		assertEquals(result.getName(), pet.getName(), ()->"name of " + result.getName() + " does not equal " + pet.getName());
+		assertEquals(result.getType(), pet.getType(), ()->"type of " + result.getType() + " does not equal " + pet.getType());
+		assertEquals(result.getNotes(), pet.getNotes(), ()->"name of " + result.getNotes() + " does not equal " + pet.getNotes());
 
 		Key anotherKey = Key.builder()
                 .partitionValue("CUSTOMER#"+PHONE1)
@@ -184,10 +184,10 @@ public class CustomerRepositoryIntegrationTest {
 		
 		Pet anotherResult = petTable.getItem(anotherKey);
 		
-        assertNotNull(anotherResult);
-        assertEquals(anotherResult.getName(), anotherPet.getName(), ()->"name of " + anotherResult.getName() + " does not equal " + anotherPet.getName());
-        assertEquals(anotherResult.getType(), anotherPet.getType(), ()->"type of " + anotherResult.getType() + " does not equal " + anotherPet.getType());
-        assertEquals(anotherResult.getNotes(), anotherPet.getNotes(), ()->"name of " + anotherResult.getNotes() + " does not equal " + anotherPet.getNotes());
+		assertNotNull(anotherResult);
+		assertEquals(anotherResult.getName(), anotherPet.getName(), ()->"name of " + anotherResult.getName() + " does not equal " + anotherPet.getName());
+		assertEquals(anotherResult.getType(), anotherPet.getType(), ()->"type of " + anotherResult.getType() + " does not equal " + anotherPet.getType());
+		assertEquals(anotherResult.getNotes(), anotherPet.getNotes(), ()->"name of " + anotherResult.getNotes() + " does not equal " + anotherPet.getNotes());
 
 		Key yetAnotherKey = Key.builder()
                 .partitionValue("CUSTOMER#"+PHONE2)
@@ -196,10 +196,10 @@ public class CustomerRepositoryIntegrationTest {
 		
 		Pet yetAnotherResult = petTable.getItem(yetAnotherKey);
 		
-        assertNotNull(yetAnotherResult);
-        assertEquals(yetAnotherResult.getName(), yetAnotherPet.getName(), ()->"name of " + yetAnotherResult.getName() + " does not equal " + yetAnotherPet.getName());
-        assertEquals(yetAnotherResult.getType(), yetAnotherPet.getType(), ()->"type of " + yetAnotherResult.getType() + " does not equal " + yetAnotherPet.getType());
-        assertEquals(yetAnotherResult.getNotes(), yetAnotherPet.getNotes(), ()->"name of " + yetAnotherResult.getNotes() + " does not equal " + yetAnotherPet.getNotes());
+		assertNotNull(yetAnotherResult);
+		assertEquals(yetAnotherResult.getName(), yetAnotherPet.getName(), ()->"name of " + yetAnotherResult.getName() + " does not equal " + yetAnotherPet.getName());
+		assertEquals(yetAnotherResult.getType(), yetAnotherPet.getType(), ()->"type of " + yetAnotherResult.getType() + " does not equal " + yetAnotherPet.getType());
+		assertEquals(yetAnotherResult.getNotes(), yetAnotherPet.getNotes(), ()->"name of " + yetAnotherResult.getNotes() + " does not equal " + yetAnotherPet.getNotes());
 	}
 	
 	@Test
