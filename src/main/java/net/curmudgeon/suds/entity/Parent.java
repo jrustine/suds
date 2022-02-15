@@ -1,10 +1,12 @@
 package net.curmudgeon.suds.entity;
 
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbIgnore;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
@@ -31,6 +33,7 @@ public class Parent {
 	private String lastName;
 	private Map<String,String> address;
 	private String phoneNumber;
+	private List<Pet> pets;
 	
 	public Parent() { }
 
@@ -84,6 +87,16 @@ public class Parent {
 		this.phoneNumber = phoneNumber;
 	}
 	
+	@DynamoDbIgnore
+	public List<Pet> getPets() {
+		return pets;
+	}
+
+	@DynamoDbIgnore
+	public void setPets(List<Pet> pets) {
+		this.pets = pets;
+	}
+
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);
 	}

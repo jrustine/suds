@@ -70,6 +70,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 	 */
 	@Override
 	public Parent getParent(String phoneNumber) {
+		Parent parent = null;
 		
 		// Build attributes including full Customer ID and a string containing
 		// the word "PARENT" for matching just parents.
@@ -92,7 +93,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		PageIterable<Parent> parentResults = parentTable.scan(parentRequest);
 		
 		// Should only be one, and it should throw error if more than one is found but doesn't yet.
-		return parentResults.items().iterator().next();
+		if (parentResults.items().iterator().hasNext())
+			parent = parentResults.items().iterator().next();
+		
+		return parent;
 	}
 
 	/**

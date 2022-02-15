@@ -81,10 +81,10 @@ public class CustomerRepositoryIntegrationTest {
 	@Test
 	public void a_testParentSavesAndRetrieves() throws Exception {
 		Map<String,String> address = new HashMap<String,String>();
-		address.put("Street", "123 Main Street");
-		address.put("City", "Baltimore");
-		address.put("State", "MD");
-		address.put("ZipCode", "21213");
+		address.put("street", "123 Main Street");
+		address.put("city", "Baltimore");
+		address.put("state", "MD");
+		address.put("zipCode", "21213");
 
 		Parent parent = new Parent();
 		parent.setFirstName("Joan");
@@ -95,10 +95,10 @@ public class CustomerRepositoryIntegrationTest {
 		customerRepository.saveParent(parent);
 		
 		Map<String,String> anotherAddress = new HashMap<String,String>();
-		anotherAddress.put("Street", "123 Main Street");
-		anotherAddress.put("City", "Crofton");
-		anotherAddress.put("State", "MD");
-		anotherAddress.put("ZipCode", "21114");
+		anotherAddress.put("street", "123 Main Street");
+		anotherAddress.put("city", "Crofton");
+		anotherAddress.put("state", "MD");
+		anotherAddress.put("zipCode", "21114");
 
 		Parent anotherParent = new Parent();
 		anotherParent.setFirstName("John");
