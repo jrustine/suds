@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 
 import net.curmudgeon.suds.repository.CustomerRepository;
 import net.curmudgeon.suds.repository.CustomerRepositoryImpl;
+import net.curmudgeon.suds.repository.GroomerRepository;
+import net.curmudgeon.suds.repository.GroomerRepositoryImpl;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -72,5 +74,11 @@ public class DynamoDbConfig {
 	public CustomerRepository customerRepository() {
 		CustomerRepository customerRepository = new CustomerRepositoryImpl(dynamoDbEnhancedClient());
 		return customerRepository;
+	}
+	
+	@Bean
+	public GroomerRepository groomerRepository() {
+		GroomerRepository groomerRepository = new GroomerRepositoryImpl(dynamoDbEnhancedClient());
+		return groomerRepository;
 	}
 }

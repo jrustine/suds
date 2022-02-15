@@ -78,8 +78,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		AttributeValue attrId = AttributeValue.builder().s("PARENT").build();
 
 		Map<String,AttributeValue> values = new HashMap<>();
-		values.put(":parentIdPrefix", attrId);
 		values.put(":customerId", attrCustomerId);
+		values.put(":parentIdPrefix", attrId);
 		
 		// Build expression. We're looking for a specific Customer ID partition key
 		// and any matching IDs that start with "PARENT".
@@ -198,8 +198,8 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		AttributeValue attrId = AttributeValue.builder().s("PET").build();
 
 		Map<String,AttributeValue> values = new HashMap<>();
-		values.put(":petIdPrefix", attrId);
 		values.put(":customerId", attrCustomerId);
+		values.put(":petIdPrefix", attrId);
 		
 		// Build expression. We're looking for a specific Customer ID partition key
 		// and any matching IDs that start with "PET".
