@@ -40,7 +40,9 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 	}
 
 	/**
-	 * Save out a Groomer object. Groomer information is versioned.
+	 * Save out a Groomer object. Groomer information is versioned. Used Amazon's suggested approach
+	 * of each item having a "v0" record that contains the latest and greates information, while saving
+	 * out "vN" records every time it's updated.
 	 * 
 	 * @param Groomer
 	 */
