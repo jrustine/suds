@@ -56,7 +56,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		
 		// Create DynamoDB partition key and sort key.
 		parent.setCustomerId("CUSTOMER#"+StringUtils.getDigits(parent.getPhoneNumber()));
-		parent.setId("PARENT#"+formatName(parent.getFirstName(), parent.getLastName()));
+		parent.setId("PARENT#"+formatStringForKey(parent.getFirstName())+formatStringForKey(parent.getLastName()));
 		
 		parentTable.putItem(parent);
 	}
@@ -113,7 +113,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		// Create partition and sort keys.
 		Key key = Key.builder()
                 .partitionValue("CUSTOMER#"+StringUtils.getDigits(phoneNumber))
-                .sortValue("PARENT#"+formatName(firstName, lastName))
+                .sortValue("PARENT#"+formatStringForKey(firstName)+formatStringForKey(lastName))
                 .build();
 		
 		return parentTable.getItem(key);
@@ -159,7 +159,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		
 		// Create DynamoDB partition key and sort key.
 		pet.setCustomerId("CUSTOMER#"+StringUtils.getDigits(pet.getPhoneNumber()));
-		pet.setId("PET#"+formatName(pet.getName()));
+		pet.setId("PET#"+formatStringForKey(pet.getName()));
 		
 		petTable.putItem(pet);
 	}
@@ -177,7 +177,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		// Create partition and sort keys.
 		Key key = Key.builder()
                 .partitionValue("CUSTOMER#"+StringUtils.getDigits(phoneNumber))
-                .sortValue("PET#"+formatName(name))
+                .sortValue("PET#"+formatStringForKey(name))
                 .build();
 		
 		return petTable.getItem(key);
@@ -249,24 +249,12 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 	}
 
 	/**
-	 * Scrubs and formats customer name.
+	 * Scrubs and formats string for keys.
 	 * 
-	 * @param firstName
-	 * @param lastName
-	 * @return formatted name
+	 * @param string
+	 * @return formatted string
 	 */
-	private String formatName(String firstName, String lastName) {
-		return firstName.replaceAll("[^a-zA-Z0-9]", "").toUpperCase() +
-				lastName.replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
-	}
-
-	/**
-	 * Scrubs and formats pet name.
-	 * 
-	 * @param name
-	 * @return formatted name
-	 */
-	private String formatName(String name) {
+	private String formatStringForKey(String name) {
 		return name.replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
 	}
 
