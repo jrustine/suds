@@ -8,6 +8,7 @@ Just a silly dog grooming appointment application I created to play with Amazon'
 |----------|----------|
 | Customer | Customer names and pet information |
 | Groomer  | Groomers and work schedules (versioned) |
+| Schedule | Simple schedule entries |
 
 ## Endpoints
 
