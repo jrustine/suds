@@ -1,5 +1,6 @@
 package net.curmudgeon.suds.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,10 +117,35 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 		return groomer;
 	}
 
+	/**
+	 * Returns a list of all active groomers.
+	 * 
+	 * @return all matching Groomers
+	 */
 	@Override
 	public List<Groomer> getAllGroomers() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		// Build attribute, a string containing the "v0" sort key to just get the latest versions.
+		AttributeValue attrVersion = AttributeValue.builder().s("v0").build();
+
+		Map<String,AttributeValue> values = new HashMap<>();
+		values.put(":version0", attrVersion);
+		
+		// Build expression. We're looking for a specific Groomer ID partition key
+		// and the v0 version record.
+		Expression groomerExpression = Expression.builder()
+				.expressionValues(values)
+				.expression("version = :version0")
+				.build();
+		
+		// Scan table for results.
+		ScanEnhancedRequest groomerRequest = ScanEnhancedRequest.builder().filterExpression(groomerExpression).build();
+		PageIterable<Groomer> groomerResults = groomerTable.scan(groomerRequest);
+
+		// Convert and return results.
+		List<Groomer> results = new ArrayList<Groomer>();
+		groomerResults.items().forEach(results::add);
+		return results;
 	}
 
 }

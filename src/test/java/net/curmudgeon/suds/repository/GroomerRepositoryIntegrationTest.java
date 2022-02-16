@@ -2,11 +2,13 @@ package net.curmudgeon.suds.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -63,6 +65,8 @@ public class GroomerRepositoryIntegrationTest {
 	private GroomerRepository groomerRepository;
 
 	private static final String EMPLOYEE1 = "SUDS001";
+	private static final String EMPLOYEE2 = "SUDS002";
+	private static final String EMPLOYEE3 = "SUDS003";
 
 	@BeforeAll
 	public void setup() throws Exception {
@@ -78,7 +82,7 @@ public class GroomerRepositoryIntegrationTest {
 	}
 	
 	@Test
-	public void a_testGroomerSavesAndRetrieves() throws Exception {
+	public void a_testGroomerSaveAndVersioning() throws Exception {
 		List<WorkSchedule> workSchedule = new ArrayList<>();
 		workSchedule.add(new WorkSchedule(DayOfWeek.MONDAY, 8, 17));
 		workSchedule.add(new WorkSchedule(DayOfWeek.TUESDAY, 8, 17));
@@ -103,7 +107,7 @@ public class GroomerRepositoryIntegrationTest {
 		assertEquals(result.getLastName(), groomer.getLastName(), "last name " + result.getLastName() + " is not " + groomer.getLastName());
 		assertEquals(result.getHomePhoneNumber(), groomer.getHomePhoneNumber(), "phone " + result.getHomePhoneNumber() + " is not " + groomer.getHomePhoneNumber());		
 
-		// Change phone number and re-save.
+		// Change phone number and re-save to create a new version.
 		groomer.setHomePhoneNumber("(443) 888-9999");
 		groomerRepository.saveGroomer(groomer);
 
@@ -114,5 +118,56 @@ public class GroomerRepositoryIntegrationTest {
 		assertEquals(result2.getFirstName(), groomer.getFirstName(), "first name " + result2.getFirstName() + " is not " + groomer.getFirstName());
 		assertEquals(result2.getLastName(), groomer.getLastName(), "last name " + result2.getLastName() + " is not " + groomer.getLastName());
 		assertEquals(result2.getHomePhoneNumber(), groomer.getHomePhoneNumber(), "phone " + result2.getHomePhoneNumber() + " is not " + groomer.getHomePhoneNumber());		
+	}
+	
+	@Test
+	public void b_testMultipleGroomers() throws Exception {
+		List<WorkSchedule> workSchedule = new ArrayList<>();
+		workSchedule.add(new WorkSchedule(DayOfWeek.MONDAY, 8, 17));
+		workSchedule.add(new WorkSchedule(DayOfWeek.TUESDAY, 8, 17));
+		workSchedule.add(new WorkSchedule(DayOfWeek.WEDNESDAY, 8, 17));
+		workSchedule.add(new WorkSchedule(DayOfWeek.THURSDAY, 8, 17));
+		workSchedule.add(new WorkSchedule(DayOfWeek.FRIDAY, 8, 17));
+		
+		Groomer groomer = new Groomer();
+		groomer.setEmployeeNumber(EMPLOYEE2);
+		groomer.setFirstName("Desdemona");
+		groomer.setLastName("Arlington");
+		groomer.setHomePhoneNumber("(703) 333-7777");
+		groomer.setWorkSchedule(workSchedule);
+		
+		groomerRepository.saveGroomer(groomer);
+		
+		// Change name and re-save to create a new version.
+		groomer.setLastName("Covington");
+		groomerRepository.saveGroomer(groomer);
+
+		List<WorkSchedule> workSchedule2 = new ArrayList<>();
+		workSchedule2.add(new WorkSchedule(DayOfWeek.MONDAY, 8, 17));
+		workSchedule2.add(new WorkSchedule(DayOfWeek.WEDNESDAY, 8, 17));
+		workSchedule2.add(new WorkSchedule(DayOfWeek.FRIDAY, 8, 17));
+		
+		Groomer groomer2 = new Groomer();
+		groomer2.setEmployeeNumber(EMPLOYEE3);
+		groomer2.setFirstName("Roger");
+		groomer2.setLastName("McCheese");
+		groomer2.setHomePhoneNumber("(443) 555-6666");
+		groomer2.setWorkSchedule(workSchedule2);
+		
+		groomerRepository.saveGroomer(groomer2);
+		
+		List<Groomer> groomers = groomerRepository.getAllGroomers();
+		assertNotNull(groomers);
+		
+		// Horrible assumption, but we should have 3 by now.
+		assertEquals(groomers.size(), 3, "size of " + groomers.size() + " is not 3");
+		
+		assertTrue(groomers.stream().anyMatch(item -> EMPLOYEE1.equals(item.getEmployeeNumber())));
+		assertTrue(groomers.stream().anyMatch(item -> EMPLOYEE2.equals(item.getEmployeeNumber())));
+		assertTrue(groomers.stream().anyMatch(item -> EMPLOYEE3.equals(item.getEmployeeNumber())));
+		
+		// Verify correct versions.
+		assertTrue(groomers.stream().anyMatch(item -> "Covington".equals(item.getLastName())));
+		assertTrue(groomers.stream().anyMatch(item -> "4438889999".equals(StringUtils.getDigits(item.getHomePhoneNumber()))));
 	}
 }

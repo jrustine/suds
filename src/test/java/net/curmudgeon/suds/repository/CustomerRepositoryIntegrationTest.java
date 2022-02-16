@@ -2,6 +2,7 @@ package net.curmudgeon.suds.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,8 +88,8 @@ public class CustomerRepositoryIntegrationTest {
 		address.put("zipCode", "21213");
 
 		Parent parent = new Parent();
-		parent.setFirstName("Joan");
-		parent.setLastName("Doe");
+		parent.setFirstName("Ariana");
+		parent.setLastName("Allbright");
 		parent.setPhoneNumber(PHONE1);
 		parent.setAddress(address);
 		
@@ -101,8 +102,8 @@ public class CustomerRepositoryIntegrationTest {
 		anotherAddress.put("zipCode", "21114");
 
 		Parent anotherParent = new Parent();
-		anotherParent.setFirstName("John");
-		anotherParent.setLastName("Smith");
+		anotherParent.setFirstName("Sam");
+		anotherParent.setLastName("Beckett");
 		anotherParent.setPhoneNumber(PHONE2);
 		anotherParent.setAddress(anotherAddress);
 		
@@ -196,18 +197,25 @@ public class CustomerRepositoryIntegrationTest {
 	public void c_testQueriesBasedOnPreviousTests() {
 		
 		// Get just parents.
-		List<Parent> parents = customerRepository.getAllParents();
-		System.out.println("Just parents");
-		parents.stream().forEach(item -> System.out.println(item));
+		List<Parent> parents = customerRepository.getAllParents();		
+		assertNotNull(parents);
+		assertEquals(parents.size(), 2, "size of " + parents.size() + " is not 2");
+		assertTrue(parents.stream().anyMatch(item -> "Allbright".equals(item.getLastName())));
+		assertTrue(parents.stream().anyMatch(item -> "Beckett".equals(item.getLastName())));
 
 		// Get just pets.
 		List<Pet> pets = customerRepository.getAllPets();
-		System.out.println("Just pets");
-		pets.stream().forEach(item -> System.out.println(item));
+		assertNotNull(pets);
+		assertEquals(pets.size(), 3, "size of " + pets.size() + " is not 3");
+		assertTrue(pets.stream().anyMatch(item -> "Buddy".equals(item.getName())));
+		assertTrue(pets.stream().anyMatch(item -> "Fluffernutter".equals(item.getName())));
+		assertTrue(pets.stream().anyMatch(item -> "Sparky".equals(item.getName())));
 
 		// Retrieve pets for a specific customer.
 		List<Pet> petsForCustomer = customerRepository.getPetsForParent(PHONE1);
-		System.out.println("Pets for customer " + PHONE1);
-		petsForCustomer.stream().forEach(item -> System.out.println(item));		
+		assertNotNull(petsForCustomer);
+		assertEquals(petsForCustomer.size(), 2, "size of " + petsForCustomer.size() + " is not 2");
+		assertTrue(petsForCustomer.stream().anyMatch(item -> "Buddy".equals(item.getName())));
+		assertTrue(petsForCustomer.stream().anyMatch(item -> "Fluffernutter".equals(item.getName())));
 	}
 }
