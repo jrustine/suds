@@ -10,6 +10,8 @@ import net.curmudgeon.suds.repository.CustomerRepository;
 import net.curmudgeon.suds.repository.CustomerRepositoryImpl;
 import net.curmudgeon.suds.repository.GroomerRepository;
 import net.curmudgeon.suds.repository.GroomerRepositoryImpl;
+import net.curmudgeon.suds.repository.ScheduleRepository;
+import net.curmudgeon.suds.repository.ScheduleRepositoryImpl;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
@@ -80,5 +82,11 @@ public class DynamoDbConfig {
 	public GroomerRepository groomerRepository() {
 		GroomerRepository groomerRepository = new GroomerRepositoryImpl(dynamoDbEnhancedClient());
 		return groomerRepository;
+	}
+
+	@Bean
+	public ScheduleRepository scheduleRepository() {
+		ScheduleRepository scheduleRepository = new ScheduleRepositoryImpl(dynamoDbEnhancedClient());
+		return scheduleRepository;
 	}
 }

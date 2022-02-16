@@ -34,7 +34,7 @@ import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 public class GroomerRepositoryImpl implements GroomerRepository {
 	private DynamoDbTable<Groomer> groomerTable;
 	
-	// Constructor creates table objects.
+	// Constructor creates table object.
 	public GroomerRepositoryImpl(DynamoDbEnhancedClient dynamoDbEnhancedClient) {
 		groomerTable = dynamoDbEnhancedClient.table("Groomer", TableSchema.fromBean(Groomer.class));
 	}
