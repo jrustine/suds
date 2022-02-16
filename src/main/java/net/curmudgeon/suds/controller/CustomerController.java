@@ -103,7 +103,7 @@ public class CustomerController {
 		customerRepository.saveParent(parent);
 		
 		// Save out pets separately. Phone is not required for
-		// each pet, so set it.
+		// each pet, so set it manually.
 		for (Pet pet: parent.getPets()) {
 			pet.setPhoneNumber(parent.getPhoneNumber());
 			customerRepository.savePet(pet);
