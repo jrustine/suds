@@ -60,7 +60,7 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 			groomer.setVersion("v" + newVersion);
 			groomerTable.putItem(groomer);
 			
-			// Replace the v0 record.parent
+			// Replace the v0 record.
 			groomer.setVersion("v0");
 			groomer.setLatestVersion(newVersion);
 			groomerTable.putItem(groomer);
