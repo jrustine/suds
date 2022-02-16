@@ -1,6 +1,7 @@
 package net.curmudgeon.suds.entity;
 
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
@@ -24,12 +25,12 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 @DynamoDbBean
 public class WorkSchedule {
 	private DayOfWeek day;
-	private Integer start;
-	private Integer end;
+	private LocalTime start;
+	private LocalTime end;
 
 	public WorkSchedule() { }
 	
-	public WorkSchedule(DayOfWeek day, Integer start, Integer end) {
+	public WorkSchedule(DayOfWeek day, LocalTime start, LocalTime end) {
 		super();
 		this.day = day;
 		this.start = start;
@@ -44,19 +45,19 @@ public class WorkSchedule {
 		this.day = day;
 	}
 
-	public Integer getStart() {
+	public LocalTime getStart() {
 		return start;
 	}
 
-	public void setStart(Integer start) {
+	public void setStart(LocalTime start) {
 		this.start = start;
 	}
 
-	public Integer getEnd() {
+	public LocalTime getEnd() {
 		return end;
 	}
 
-	public void setEnd(Integer end) {
+	public void setEnd(LocalTime end) {
 		this.end = end;
 	}
 

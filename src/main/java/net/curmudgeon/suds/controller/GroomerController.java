@@ -66,18 +66,18 @@ public class GroomerController {
 	 *		"workSchedule": [
 	 *			{
 	 *				"day": "MONDAY",
-	 *				"start": 8,
-	 *				"end": 17
+	 *				"start": "08:00",
+	 *				"end": "17:00"
 	 *			},
 	 *			{
 	 *				"day": "WEDNESDAY",
-	 *				"start": 8,
-	 *				"end": 17
+	 *				"start": "08:00",
+	 *				"end": "17:00"
 	 *			},
 	 *			{
 	 *				"day": "FRIDAY",
-	 *				"start": 8,
-	 *				"end": 17
+	 *				"start": "08:00",
+	 *				"end": "17:00"
 	 *			}
 	 *		]
 	 *	}

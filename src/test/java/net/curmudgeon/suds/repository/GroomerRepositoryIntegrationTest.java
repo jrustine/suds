@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.DayOfWeek;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,11 +85,11 @@ public class GroomerRepositoryIntegrationTest {
 	@Test
 	public void a_testGroomerSaveAndVersioning() throws Exception {
 		List<WorkSchedule> workSchedule = new ArrayList<>();
-		workSchedule.add(new WorkSchedule(DayOfWeek.MONDAY, 8, 17));
-		workSchedule.add(new WorkSchedule(DayOfWeek.TUESDAY, 8, 17));
-		workSchedule.add(new WorkSchedule(DayOfWeek.THURSDAY, 8, 17));
-		workSchedule.add(new WorkSchedule(DayOfWeek.FRIDAY, 8, 17));
-		workSchedule.add(new WorkSchedule(DayOfWeek.SATURDAY, 10, 14));
+		workSchedule.add(new WorkSchedule(DayOfWeek.MONDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule.add(new WorkSchedule(DayOfWeek.TUESDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule.add(new WorkSchedule(DayOfWeek.THURSDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule.add(new WorkSchedule(DayOfWeek.FRIDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule.add(new WorkSchedule(DayOfWeek.SATURDAY, LocalTime.of(10, 0), LocalTime.of(14, 0)));
 		
 		Groomer groomer = new Groomer();
 		groomer.setEmployeeNumber(EMPLOYEE1);
@@ -123,11 +124,11 @@ public class GroomerRepositoryIntegrationTest {
 	@Test
 	public void b_testMultipleGroomers() throws Exception {
 		List<WorkSchedule> workSchedule = new ArrayList<>();
-		workSchedule.add(new WorkSchedule(DayOfWeek.MONDAY, 8, 17));
-		workSchedule.add(new WorkSchedule(DayOfWeek.TUESDAY, 8, 17));
-		workSchedule.add(new WorkSchedule(DayOfWeek.WEDNESDAY, 8, 17));
-		workSchedule.add(new WorkSchedule(DayOfWeek.THURSDAY, 8, 17));
-		workSchedule.add(new WorkSchedule(DayOfWeek.FRIDAY, 8, 17));
+		workSchedule.add(new WorkSchedule(DayOfWeek.MONDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule.add(new WorkSchedule(DayOfWeek.TUESDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule.add(new WorkSchedule(DayOfWeek.WEDNESDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule.add(new WorkSchedule(DayOfWeek.THURSDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule.add(new WorkSchedule(DayOfWeek.FRIDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
 		
 		Groomer groomer = new Groomer();
 		groomer.setEmployeeNumber(EMPLOYEE2);
@@ -143,9 +144,9 @@ public class GroomerRepositoryIntegrationTest {
 		groomerRepository.saveGroomer(groomer);
 
 		List<WorkSchedule> workSchedule2 = new ArrayList<>();
-		workSchedule2.add(new WorkSchedule(DayOfWeek.MONDAY, 8, 17));
-		workSchedule2.add(new WorkSchedule(DayOfWeek.WEDNESDAY, 8, 17));
-		workSchedule2.add(new WorkSchedule(DayOfWeek.FRIDAY, 8, 17));
+		workSchedule2.add(new WorkSchedule(DayOfWeek.MONDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule2.add(new WorkSchedule(DayOfWeek.WEDNESDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
+		workSchedule2.add(new WorkSchedule(DayOfWeek.FRIDAY, LocalTime.of(8, 0), LocalTime.of(17, 0)));
 		
 		Groomer groomer2 = new Groomer();
 		groomer2.setEmployeeNumber(EMPLOYEE3);
