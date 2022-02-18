@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -25,6 +26,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import net.curmudgeon.suds.SudsApplication;
 import net.curmudgeon.suds.entity.Parent;
 import net.curmudgeon.suds.entity.Pet;
+import net.curmudgeon.suds.util.KeyUtils;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
@@ -109,7 +111,7 @@ public class CustomerRepositoryIntegrationTest {
 		
 		customerRepository.saveParent(anotherParent);
 
-		Parent result = customerRepository.getParent(PHONE1, parent.getFirstName(), parent.getLastName());
+		Parent result = customerRepository.getParentByPhoneNumber(PHONE1);
 		
 		assertNotNull(result);
 		assertEquals(result.getAddress().size(), 4, "address size of " + result.getAddress().size() + " does not equal 4");
@@ -117,7 +119,7 @@ public class CustomerRepositoryIntegrationTest {
 		assertEquals(result.getLastName(), parent.getLastName(), "last name " + result.getLastName() + " is not " + parent.getLastName());
 		assertEquals(result.getPhoneNumber(), parent.getPhoneNumber(), "phone number " + result.getPhoneNumber() + " is not " + parent.getPhoneNumber());
 
-		Parent result2 = customerRepository.getParent(PHONE1);
+		Parent result2 = customerRepository.getParentByCustomerId("CUSTOMER#"+StringUtils.getDigits(parent.getPhoneNumber()));
 		
 		assertNotNull(result2);
 		assertEquals(result2.getAddress().size(), 4, "address size of " + result2.getAddress().size() + " does not equal 4");
@@ -125,7 +127,7 @@ public class CustomerRepositoryIntegrationTest {
 		assertEquals(result2.getLastName(), parent.getLastName(), "last name " + result2.getLastName() + " is not " + parent.getLastName());
 		assertEquals(result2.getPhoneNumber(), parent.getPhoneNumber(), "phone number " + result2.getPhoneNumber() + " is not " + parent.getPhoneNumber());
 
-		Parent anotherResult = customerRepository.getParent(PHONE2, anotherParent.getFirstName(), anotherParent.getLastName());
+		Parent anotherResult = customerRepository.getParentByPhoneNumber(PHONE2);
 		
 		assertNotNull(anotherResult);
 		assertEquals(anotherResult.getAddress().size(), 4, "address size of " + anotherResult.getAddress().size() + " does not equal 4");
@@ -133,7 +135,7 @@ public class CustomerRepositoryIntegrationTest {
 		assertEquals(anotherResult.getLastName(), anotherParent.getLastName(), "last name " + anotherResult.getLastName() + " is not " + anotherParent.getLastName());
 		assertEquals(anotherResult.getPhoneNumber(), anotherParent.getPhoneNumber(), "phone number " + anotherResult.getPhoneNumber() + " is not " + anotherParent.getPhoneNumber());
 
-		Parent anotherResult2 = customerRepository.getParent(PHONE2);
+		Parent anotherResult2 = customerRepository.getParentByCustomerId("CUSTOMER#"+StringUtils.getDigits(anotherParent.getPhoneNumber()));
 		
 		assertNotNull(anotherResult2);
 		assertEquals(anotherResult2.getAddress().size(), 4, "address size of " + anotherResult2.getAddress().size() + " does not equal 4");
@@ -168,7 +170,7 @@ public class CustomerRepositoryIntegrationTest {
 		
 		customerRepository.savePet(yetAnotherPet);
 
-		Pet result = customerRepository.getPet(PHONE1, pet.getName());
+		Pet result = customerRepository.getPetByPhoneNumberAndName(PHONE1, pet.getName());
 		
 		assertNotNull(result);
 		assertEquals(result.getPhoneNumber(), pet.getPhoneNumber(), "phone of " + result.getPhoneNumber() + " does not equal " + pet.getPhoneNumber());
@@ -176,7 +178,17 @@ public class CustomerRepositoryIntegrationTest {
 		assertEquals(result.getType(), pet.getType(), "type of " + result.getType() + " does not equal " + pet.getType());
 		assertEquals(result.getNotes(), pet.getNotes(), "name of " + result.getNotes() + " does not equal " + pet.getNotes());
 
-		Pet anotherResult = customerRepository.getPet(PHONE1, anotherPet.getName());
+		Pet result2 = customerRepository.getPetByCustomerIdAndPetId(
+				"CUSTOMER#"+StringUtils.getDigits(PHONE1), 
+				"PET#"+KeyUtils.formatStringForKey(pet.getName()));
+		
+		assertNotNull(result2);
+		assertEquals(result2.getPhoneNumber(), pet.getPhoneNumber(), "phone of " + result2.getPhoneNumber() + " does not equal " + pet.getPhoneNumber());
+		assertEquals(result2.getName(), pet.getName(), "name of " + result2.getName() + " does not equal " + pet.getName());
+		assertEquals(result2.getType(), pet.getType(), "type of " + result2.getType() + " does not equal " + pet.getType());
+		assertEquals(result2.getNotes(), pet.getNotes(), "name of " + result2.getNotes() + " does not equal " + pet.getNotes());
+
+		Pet anotherResult = customerRepository.getPetByPhoneNumberAndName(PHONE1, anotherPet.getName());
 		
 		assertNotNull(anotherResult);
 		assertEquals(anotherResult.getPhoneNumber(), anotherPet.getPhoneNumber(), "phone of " + anotherResult.getPhoneNumber() + " does not equal " + anotherPet.getPhoneNumber());
@@ -184,13 +196,33 @@ public class CustomerRepositoryIntegrationTest {
 		assertEquals(anotherResult.getType(), anotherPet.getType(), "type of " + anotherResult.getType() + " does not equal " + anotherPet.getType());
 		assertEquals(anotherResult.getNotes(), anotherPet.getNotes(), "name of " + anotherResult.getNotes() + " does not equal " + anotherPet.getNotes());
 
-		Pet yetAnotherResult = customerRepository.getPet(PHONE2, yetAnotherPet.getName());
+		Pet anotherResult2 = customerRepository.getPetByCustomerIdAndPetId(
+				"CUSTOMER#"+StringUtils.getDigits(PHONE1), 
+				"PET#"+KeyUtils.formatStringForKey(anotherPet.getName()));
+		
+		assertNotNull(anotherResult2);
+		assertEquals(anotherResult2.getPhoneNumber(), anotherPet.getPhoneNumber(), "phone of " + anotherResult2.getPhoneNumber() + " does not equal " + anotherPet.getPhoneNumber());
+		assertEquals(anotherResult2.getName(), anotherPet.getName(), "name of " + anotherResult2.getName() + " does not equal " + anotherPet.getName());
+		assertEquals(anotherResult2.getType(), anotherPet.getType(), "type of " + anotherResult2.getType() + " does not equal " + anotherPet.getType());
+		assertEquals(anotherResult2.getNotes(), anotherPet.getNotes(), "name of " + anotherResult2.getNotes() + " does not equal " + anotherPet.getNotes());
+
+		Pet yetAnotherResult = customerRepository.getPetByPhoneNumberAndName(PHONE2, yetAnotherPet.getName());
 		
 		assertNotNull(yetAnotherResult);
 		assertEquals(yetAnotherResult.getPhoneNumber(), yetAnotherPet.getPhoneNumber(), "phone of " + yetAnotherResult.getPhoneNumber() + " does not equal " + yetAnotherPet.getPhoneNumber());
 		assertEquals(yetAnotherResult.getName(), yetAnotherPet.getName(), "name of " + yetAnotherResult.getName() + " does not equal " + yetAnotherPet.getName());
 		assertEquals(yetAnotherResult.getType(), yetAnotherPet.getType(), "type of " + yetAnotherResult.getType() + " does not equal " + yetAnotherPet.getType());
 		assertEquals(yetAnotherResult.getNotes(), yetAnotherPet.getNotes(), "name of " + yetAnotherResult.getNotes() + " does not equal " + yetAnotherPet.getNotes());
+
+		Pet yetAnotherResult2 = customerRepository.getPetByCustomerIdAndPetId(
+				"CUSTOMER#"+StringUtils.getDigits(PHONE2), 
+				"PET#"+KeyUtils.formatStringForKey(yetAnotherPet.getName()));
+		
+		assertNotNull(yetAnotherResult2);
+		assertEquals(yetAnotherResult2.getPhoneNumber(), yetAnotherPet.getPhoneNumber(), "phone of " + yetAnotherResult2.getPhoneNumber() + " does not equal " + yetAnotherPet.getPhoneNumber());
+		assertEquals(yetAnotherResult2.getName(), yetAnotherPet.getName(), "name of " + yetAnotherResult2.getName() + " does not equal " + yetAnotherPet.getName());
+		assertEquals(yetAnotherResult2.getType(), yetAnotherPet.getType(), "type of " + yetAnotherResult2.getType() + " does not equal " + yetAnotherPet.getType());
+		assertEquals(yetAnotherResult2.getNotes(), yetAnotherPet.getNotes(), "name of " + yetAnotherResult2.getNotes() + " does not equal " + yetAnotherPet.getNotes());
 	}
 	
 	@Test

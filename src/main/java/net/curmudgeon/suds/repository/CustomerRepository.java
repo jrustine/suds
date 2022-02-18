@@ -25,12 +25,13 @@ import net.curmudgeon.suds.entity.Pet;
 public interface CustomerRepository {
 
 	public void saveParent(Parent parent);
-	public Parent getParent(String phoneNumber);
-	public Parent getParent(String phoneNumber, String firstName, String lastName);
+	public Parent getParentByCustomerId(String customerId);
+	public Parent getParentByPhoneNumber(String phoneNumber);
 	public List<Parent> getAllParents();
 	
 	public void savePet(Pet pet);
-	public Pet getPet(String phoneNumber, String name);
+	public Pet getPetByCustomerIdAndPetId(String customerId, String petId);
+	public Pet getPetByPhoneNumberAndName(String phoneNumber, String name);
 	public List<Pet> getPetsForParent(String phoneNumber);
 	public List<Pet> getAllPets();
 }

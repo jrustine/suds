@@ -55,7 +55,7 @@ public class CustomerController {
 	 */
 	@GetMapping(value="/{phoneNumber}", produces="application/json")
 	public Parent getParent(@PathVariable String phoneNumber) {
-		Parent parent = customerRepository.getParent(phoneNumber);
+		Parent parent = customerRepository.getParentByPhoneNumber(phoneNumber);
 		if (parent != null)
 			parent.setPets(customerRepository.getPetsForParent(parent.getPhoneNumber()));
 		return parent;

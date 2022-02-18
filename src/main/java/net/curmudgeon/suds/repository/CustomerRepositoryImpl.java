@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import net.curmudgeon.suds.entity.Parent;
 import net.curmudgeon.suds.entity.Pet;
+import net.curmudgeon.suds.util.KeyUtils;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Expression;
@@ -56,25 +57,26 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		
 		// Create DynamoDB partition key and sort key.
 		parent.setCustomerId("CUSTOMER#"+StringUtils.getDigits(parent.getPhoneNumber()));
-		parent.setId("PARENT#"+formatStringForKey(parent.getFirstName())+formatStringForKey(parent.getLastName()));
+		parent.setId("PARENT#"+KeyUtils.formatStringForKey(parent.getFirstName())+KeyUtils.formatStringForKey(parent.getLastName()));
 		
 		parentTable.putItem(parent);
 	}
 
+
 	/**
-	 * Retrieve a parent by phone (assumes only one parent
-	 * per customer).
+	 * Retrieve a parent customer by the partition key (assumes only one
+	 * parent per customer).
 	 * 
-	 * @param phone number
+	 * @param customer id
 	 * @return matching Parent
 	 */
 	@Override
-	public Parent getParent(String phoneNumber) {
+	public Parent getParentByCustomerId(String customerId) {
 		Parent parent = null;
 		
 		// Build attributes including full Customer ID and a string containing
 		// the word "PARENT" for matching just parents.
-		AttributeValue attrCustomerId = AttributeValue.builder().s("CUSTOMER#"+StringUtils.getDigits(phoneNumber)).build();
+		AttributeValue attrCustomerId = AttributeValue.builder().s(customerId).build();
 		AttributeValue attrId = AttributeValue.builder().s("PARENT").build();
 
 		Map<String,AttributeValue> values = new HashMap<>();
@@ -100,23 +102,14 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 	}
 
 	/**
-	 * Retrieve a parent by phone and name.
+	 * Retrieve a parent by phone.
 	 * 
 	 * @param phone number
-	 * @param first name
-	 * @param last name
 	 * @return matching Parent
 	 */
 	@Override
-	public Parent getParent(String phoneNumber, String firstName, String lastName) {
-
-		// Create partition and sort keys.
-		Key key = Key.builder()
-                .partitionValue("CUSTOMER#"+StringUtils.getDigits(phoneNumber))
-                .sortValue("PARENT#"+formatStringForKey(firstName)+formatStringForKey(lastName))
-                .build();
-		
-		return parentTable.getItem(key);
+	public Parent getParentByPhoneNumber(String phoneNumber) {
+		return getParentByCustomerId("CUSTOMER#"+StringUtils.getDigits(phoneNumber));
 	}
 
 	/**
@@ -159,9 +152,28 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		
 		// Create DynamoDB partition key and sort key.
 		pet.setCustomerId("CUSTOMER#"+StringUtils.getDigits(pet.getPhoneNumber()));
-		pet.setId("PET#"+formatStringForKey(pet.getName()));
+		pet.setId("PET#"+KeyUtils.formatStringForKey(pet.getName()));
 		
 		petTable.putItem(pet);
+	}
+
+	/**
+	 * Retrieves a specific pet by customer id and pet id.
+	 * 
+	 * @param customer id
+	 * @param pet id
+	 * @return matching pet
+	 */
+	@Override
+	public Pet getPetByCustomerIdAndPetId(String customerId, String petId) {
+		
+		// Create partition and sort keys.
+		Key key = Key.builder()
+                .partitionValue(customerId)
+                .sortValue(petId)
+                .build();
+		
+		return petTable.getItem(key);
 	}
 
 	/**
@@ -172,15 +184,10 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 	 * @return matching Pet
 	 */
 	@Override
-	public Pet getPet(String phoneNumber, String name) {
-		
-		// Create partition and sort keys.
-		Key key = Key.builder()
-                .partitionValue("CUSTOMER#"+StringUtils.getDigits(phoneNumber))
-                .sortValue("PET#"+formatStringForKey(name))
-                .build();
-		
-		return petTable.getItem(key);
+	public Pet getPetByPhoneNumberAndName(String phoneNumber, String name) {
+		return getPetByCustomerIdAndPetId(
+				"CUSTOMER#"+StringUtils.getDigits(phoneNumber),
+				"PET#"+KeyUtils.formatStringForKey(name));
 	}
 
 	/**
@@ -247,15 +254,4 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		petResults.items().forEach(results::add);
 		return results;
 	}
-
-	/**
-	 * Scrubs and formats string for keys.
-	 * 
-	 * @param string
-	 * @return formatted string
-	 */
-	private String formatStringForKey(String name) {
-		return name.replaceAll("[^a-zA-Z0-9]", "").toUpperCase();
-	}
-
 }
