@@ -52,7 +52,7 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 		String groomerId = "GROOMER#" + groomer.getEmployeeNumber();
 		
 		// Does groomer already exist?
-		Groomer existingGroomer = getGroomer(groomer.getEmployeeNumber());
+		Groomer existingGroomer = getGroomerByEmployeeNumber(groomer.getEmployeeNumber());
 		if (existingGroomer != null) {
 
 			// Create new versioned record.
@@ -83,18 +83,18 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 	}
 
 	/**
-	 * Get a groomer by employee number. This returns the v0 record.
+	 * Retrieve groomer by groomer id.
 	 * 
-	 * @param employee number
+	 * @param groomer id
 	 * @return matching Groomer
 	 */
 	@Override
-	public Groomer getGroomer(String employeeNumber) {
+	public Groomer getGroomer(String groomerId) {
 		Groomer groomer = null;
 		
 		// Build attributes including full Groomer ID and a string containing
 		// the "v0" sort key to get the latest version.
-		AttributeValue attrGroomerId = AttributeValue.builder().s("GROOMER#" + employeeNumber).build();
+		AttributeValue attrGroomerId = AttributeValue.builder().s(groomerId).build();
 		AttributeValue attrVersion = AttributeValue.builder().s("v0").build();
 
 		Map<String,AttributeValue> values = new HashMap<>();
@@ -117,6 +117,17 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 			groomer = groomerResults.items().iterator().next();
 		
 		return groomer;
+	}
+
+	/**
+	 * Get a groomer by employee number. This returns the v0 record.
+	 * 
+	 * @param employee number
+	 * @return matching Groomer
+	 */
+	@Override
+	public Groomer getGroomerByEmployeeNumber(String employeeNumber) {
+		return getGroomer("GROOMER#" + employeeNumber);
 	}
 
 	/**
@@ -149,5 +160,4 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 		groomerResults.items().forEach(results::add);
 		return results;
 	}
-
 }

@@ -100,7 +100,7 @@ public class GroomerRepositoryIntegrationTest {
 		
 		groomerRepository.saveGroomer(groomer);
 		
-		Groomer result = groomerRepository.getGroomer(EMPLOYEE1);
+		Groomer result = groomerRepository.getGroomerByEmployeeNumber(EMPLOYEE1);
 		assertNotNull(result);
 		assertEquals(result.getLatestVersion(), 1, "latest version of " + groomer.getLatestVersion() + " is not 1");
 		assertEquals(result.getWorkSchedule().size(), 5, "worksSchedule size of " + result.getWorkSchedule().size() + " does not equal 5");
@@ -108,17 +108,33 @@ public class GroomerRepositoryIntegrationTest {
 		assertEquals(result.getLastName(), groomer.getLastName(), "last name " + result.getLastName() + " is not " + groomer.getLastName());
 		assertEquals(result.getHomePhoneNumber(), groomer.getHomePhoneNumber(), "phone " + result.getHomePhoneNumber() + " is not " + groomer.getHomePhoneNumber());		
 
-		// Change phone number and re-save to create a new version.
-		groomer.setHomePhoneNumber("(443) 888-9999");
-		groomerRepository.saveGroomer(groomer);
-
-		Groomer result2 = groomerRepository.getGroomer(EMPLOYEE1);
+		Groomer result2 = groomerRepository.getGroomer("GROOMER#" + EMPLOYEE1);
 		assertNotNull(result2);
-		assertEquals(result2.getLatestVersion(), 2, "latest version of " + groomer.getLatestVersion() + " is not 2");
+		assertEquals(result2.getLatestVersion(), 1, "latest version of " + groomer.getLatestVersion() + " is not 1");
 		assertEquals(result2.getWorkSchedule().size(), 5, "worksSchedule size of " + result2.getWorkSchedule().size() + " does not equal 5");
 		assertEquals(result2.getFirstName(), groomer.getFirstName(), "first name " + result2.getFirstName() + " is not " + groomer.getFirstName());
 		assertEquals(result2.getLastName(), groomer.getLastName(), "last name " + result2.getLastName() + " is not " + groomer.getLastName());
 		assertEquals(result2.getHomePhoneNumber(), groomer.getHomePhoneNumber(), "phone " + result2.getHomePhoneNumber() + " is not " + groomer.getHomePhoneNumber());		
+
+		// Change phone number and re-save to create a new version.
+		groomer.setHomePhoneNumber("(443) 888-9999");
+		groomerRepository.saveGroomer(groomer);
+
+		Groomer result3 = groomerRepository.getGroomerByEmployeeNumber(EMPLOYEE1);
+		assertNotNull(result3);
+		assertEquals(result3.getLatestVersion(), 2, "latest version of " + groomer.getLatestVersion() + " is not 2");
+		assertEquals(result3.getWorkSchedule().size(), 5, "worksSchedule size of " + result3.getWorkSchedule().size() + " does not equal 5");
+		assertEquals(result3.getFirstName(), groomer.getFirstName(), "first name " + result3.getFirstName() + " is not " + groomer.getFirstName());
+		assertEquals(result3.getLastName(), groomer.getLastName(), "last name " + result3.getLastName() + " is not " + groomer.getLastName());
+		assertEquals(result3.getHomePhoneNumber(), groomer.getHomePhoneNumber(), "phone " + result3.getHomePhoneNumber() + " is not " + groomer.getHomePhoneNumber());		
+
+		Groomer result4 = groomerRepository.getGroomer("GROOMER#" + EMPLOYEE1);
+		assertNotNull(result4);
+		assertEquals(result4.getLatestVersion(), 2, "latest version of " + groomer.getLatestVersion() + " is not 2");
+		assertEquals(result4.getWorkSchedule().size(), 5, "worksSchedule size of " + result4.getWorkSchedule().size() + " does not equal 5");
+		assertEquals(result4.getFirstName(), groomer.getFirstName(), "first name " + result4.getFirstName() + " is not " + groomer.getFirstName());
+		assertEquals(result4.getLastName(), groomer.getLastName(), "last name " + result4.getLastName() + " is not " + groomer.getLastName());
+		assertEquals(result4.getHomePhoneNumber(), groomer.getHomePhoneNumber(), "phone " + result4.getHomePhoneNumber() + " is not " + groomer.getHomePhoneNumber());		
 	}
 	
 	@Test

@@ -52,7 +52,7 @@ public class GroomerController {
 	 */
 	@GetMapping(value="/{employeeNumber}", produces="application/json")
 	public Groomer getGroomer(@PathVariable String employeeNumber) {
-		return groomerRepository.getGroomer(employeeNumber);
+		return groomerRepository.getGroomerByEmployeeNumber(employeeNumber);
 	}
 	
 	/**

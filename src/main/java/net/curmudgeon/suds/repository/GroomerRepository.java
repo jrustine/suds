@@ -24,6 +24,7 @@ import net.curmudgeon.suds.entity.Groomer;
 public interface GroomerRepository {
 
 	public void saveGroomer(Groomer groomer);
-	public Groomer getGroomer(String employeeNumber);
+	public Groomer getGroomer(String groomerId);
+	public Groomer getGroomerByEmployeeNumber(String employeeNumber);
 	public List<Groomer> getAllGroomers();
 }
