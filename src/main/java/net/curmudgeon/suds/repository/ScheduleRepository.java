@@ -28,6 +28,6 @@ public interface ScheduleRepository {
 
 	public void saveSchedule(Schedule schedule);
 	public List<Schedule> getSchedule(LocalDateTime start, LocalDateTime end);
-	public List<Schedule> getScheduleForGroomer(Groomer groomer);
-	public List<Schedule> getScheduleForParent(Parent parent);
+	public List<Schedule> getScheduleForGroomer(Groomer groomer, LocalDateTime start, LocalDateTime end);
+	public List<Schedule> getScheduleForParent(Parent parent, LocalDateTime start, LocalDateTime end);
 }

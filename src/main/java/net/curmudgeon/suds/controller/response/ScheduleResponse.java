@@ -1,12 +1,6 @@
-package net.curmudgeon.suds.entity;
+package net.curmudgeon.suds.controller.response;
 
 import java.time.LocalDateTime;
-
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 /*
  * Copyright (C) 2022 Jay Rustine
@@ -22,58 +16,53 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and 
  * limitations under the License.
+ * 
+ * POJO containing full information for a schedule entry.
  */
-@DynamoDbBean
-public class Schedule {
+public class ScheduleResponse {
 	private String scheduleId;
 	private LocalDateTime appointmentTime;
-	private String groomerId;
-	private String customerId;
-	private String petId;
-
-	@DynamoDbPartitionKey
+	private GroomerResponse groomer;
+	private CustomerResponse customer;
+	private PetResponse pet;
+	
 	public String getScheduleId() {
 		return scheduleId;
 	}
-
+	
 	public void setScheduleId(String scheduleId) {
 		this.scheduleId = scheduleId;
 	}
-
-	@DynamoDbSortKey
+	
 	public LocalDateTime getAppointmentTime() {
 		return appointmentTime;
 	}
-
+	
 	public void setAppointmentTime(LocalDateTime appointmentTime) {
 		this.appointmentTime = appointmentTime;
 	}
-
-	public String getGroomerId() {
-		return groomerId;
-	}
-
-	public void setGroomerId(String groomerId) {
-		this.groomerId = groomerId;
-	}
-
-	public String getCustomerId() {
-		return customerId;
-	}
-
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
+	
+	public GroomerResponse getGroomer() {
+		return groomer;
 	}
 	
-	public String getPetId() {
-		return petId;
+	public void setGroomer(GroomerResponse groomer) {
+		this.groomer = groomer;
+	}
+	
+	public CustomerResponse getCustomer() {
+		return customer;
+	}
+	
+	public void setCustomer(CustomerResponse customer) {
+		this.customer = customer;
+	}
+	
+	public PetResponse getPet() {
+		return pet;
 	}
 
-	public void setPetId(String petId) {
-		this.petId = petId;
-	}
-
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
+	public void setPet(PetResponse pet) {
+		this.pet = pet;
 	}
 }

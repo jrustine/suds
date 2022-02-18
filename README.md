@@ -21,6 +21,9 @@ Just a silly dog grooming appointment application I created to play with Amazon'
 | GET  | `/groomer/`                    | Retrieves all groomers |
 | GET  | `/groomer/{employee number}` | Retrieves single groomer |
 | POST | `/groomer/`                    | Saves groomer |
+| GET  | `/schedule/{start}/{end}`    | Retrieves schedule entries between yyyy-MM-dd dates |
+| GET  | `/schedule/groomer/{employee number}/{start}/{end}` | Retrieves schedule entries for single groomer |
+| GET  | `/schedule/customer/{phone number}/{start}/{end}`    | Retrieves schedule entries for single customer |
 
 ## Notes
 

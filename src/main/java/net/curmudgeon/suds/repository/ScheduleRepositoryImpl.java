@@ -98,21 +98,27 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 	 * Get the schedule entries for a specific Groomer.
 	 * 
 	 * @param Groomer
+	 * @param start time
+	 * @param end time
 	 * @return matching Schedules
 	 */
 	@Override
-	public List<Schedule> getScheduleForGroomer(Groomer groomer) {
+	public List<Schedule> getScheduleForGroomer(Groomer groomer, LocalDateTime start, LocalDateTime end) {
 		
-		// Build attribute for the groomer ID.
+		// Build attribute for the groomer ID and start/end times.
 		AttributeValue attrGroomerId = AttributeValue.builder().s(groomer.getGroomerId()).build();
+		AttributeValue attrStartTime = AttributeValue.builder().s(start.toString()).build();
+		AttributeValue attrEndTime = AttributeValue.builder().s(end.toString()).build();
 		
 		Map<String,AttributeValue> values = new HashMap<>();
 		values.put(":groomerId", attrGroomerId);
+		values.put(":startTime", attrStartTime);
+		values.put(":endTime", attrEndTime);
 		
 		// Build expression.
 		Expression scheduleExpression = Expression.builder()
 				.expressionValues(values)
-				.expression("groomerId = :groomerId")
+				.expression("groomerId = :groomerId and appointmentTime >= :startTime and appointmentTime <= :endTime")
 				.build();
 		
 		// Scan table for results.
@@ -129,21 +135,27 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 	 * Get the schedule entries for a specific Parent.
 	 * 
 	 * @param Parent
+	 * @param start time
+	 * @param end time
 	 * @return matching Schedules
 	 */
 	@Override
-	public List<Schedule> getScheduleForParent(Parent parent) {
+	public List<Schedule> getScheduleForParent(Parent parent, LocalDateTime start, LocalDateTime end) {
 		
-		// Build attribute for the customer ID.
+		// Build attribute for the customer ID and start/end times.
 		AttributeValue attrCustomerId = AttributeValue.builder().s(parent.getCustomerId()).build();
-		
+		AttributeValue attrStartTime = AttributeValue.builder().s(start.toString()).build();
+		AttributeValue attrEndTime = AttributeValue.builder().s(end.toString()).build();
+	
 		Map<String,AttributeValue> values = new HashMap<>();
 		values.put(":customerId", attrCustomerId);
+		values.put(":startTime", attrStartTime);
+		values.put(":endTime", attrEndTime);
 		
 		// Build expression.
 		Expression scheduleExpression = Expression.builder()
 				.expressionValues(values)
-				.expression("customerId = :customerId")
+				.expression("customerId = :customerId and appointmentTime >= :startTime and appointmentTime <= :endTime")
 				.build();
 		
 		// Scan table for results.
