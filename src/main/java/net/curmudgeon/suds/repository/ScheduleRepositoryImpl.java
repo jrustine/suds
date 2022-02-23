@@ -3,6 +3,7 @@ package net.curmudgeon.suds.repository;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +11,6 @@ import java.util.Map;
 import net.curmudgeon.suds.entity.Groomer;
 import net.curmudgeon.suds.entity.Parent;
 import net.curmudgeon.suds.entity.Schedule;
-import net.curmudgeon.suds.util.ScheduleComparator;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Expression;
@@ -92,7 +92,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 		// Convert and return results.
 		List<Schedule> results = new ArrayList<Schedule>();
 		scheduleResults.items().forEach(results::add);		
-		results.sort(new ScheduleComparator());
+		Collections.sort(results);
 		return results;
 	}
 
@@ -130,7 +130,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 		// Convert and return results.
 		List<Schedule> results = new ArrayList<Schedule>();
 		scheduleResults.items().forEach(results::add);
-		results.sort(new ScheduleComparator());
+		Collections.sort(results);
 		return results;
 	}
 
@@ -168,7 +168,7 @@ public class ScheduleRepositoryImpl implements ScheduleRepository {
 		// Convert and return results.
 		List<Schedule> results = new ArrayList<Schedule>();
 		scheduleResults.items().forEach(results::add);
-		results.sort(new ScheduleComparator());
+		Collections.sort(results);
 		return results;
 	}
 }

@@ -1,12 +1,12 @@
 package net.curmudgeon.suds.repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import net.curmudgeon.suds.entity.Groomer;
-import net.curmudgeon.suds.util.GroomerComparator;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Expression;
@@ -159,7 +159,7 @@ public class GroomerRepositoryImpl implements GroomerRepository {
 		// Convert and return results.
 		List<Groomer> results = new ArrayList<Groomer>();
 		groomerResults.items().forEach(results::add);
-		results.sort(new GroomerComparator());
+		Collections.sort(results);
 		return results;
 	}
 }

@@ -1,6 +1,7 @@
 package net.curmudgeon.suds.repository;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +11,6 @@ import org.apache.commons.lang3.StringUtils;
 import net.curmudgeon.suds.entity.Parent;
 import net.curmudgeon.suds.entity.Pet;
 import net.curmudgeon.suds.util.KeyUtils;
-import net.curmudgeon.suds.util.ParentComparator;
-import net.curmudgeon.suds.util.PetComparator;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Expression;
@@ -141,7 +140,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		// Convert and return results.
 		List<Parent> results = new ArrayList<Parent>();
 		parentResults.items().forEach(results::add);
-		results.sort(new ParentComparator());
+		Collections.sort(results);
 		return results;
 	}
 
@@ -225,7 +224,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		// Convert and return results.
 		List<Pet> results = new ArrayList<Pet>();
 		petResults.items().forEach(results::add);
-		results.sort(new PetComparator());
+		Collections.sort(results);
 		return results;
 	}
 
@@ -256,7 +255,7 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 		// Convert and return results.
 		List<Pet> results = new ArrayList<Pet>();
 		petResults.items().forEach(results::add);
-		results.sort(new PetComparator());
+		Collections.sort(results);;
 		return results;
 	}
 }

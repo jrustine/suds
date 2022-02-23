@@ -1,5 +1,6 @@
 package net.curmudgeon.suds.entity;
 
+import java.util.Comparator;
 import java.util.List;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -24,7 +25,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
  * limitations under the License.
  */
 @DynamoDbBean
-public class Groomer {
+public class Groomer implements Comparable<Groomer> {
 	private String groomerId;
 	private String version;
 	private Integer latestVersion;
@@ -98,6 +99,16 @@ public class Groomer {
 
 	public void setWorkSchedule(List<WorkSchedule> workSchedule) {
 		this.workSchedule = workSchedule;
+	}
+
+	/**
+	 * Sort Groomers by last name, then first name.
+	 */
+	@Override
+	public int compareTo(Groomer groomer0) {
+	    return Comparator.comparing(Groomer::getLastName)
+	              .thenComparing(Groomer::getFirstName)
+	              .compare(this, groomer0);
 	}
 
 	public String toString() {

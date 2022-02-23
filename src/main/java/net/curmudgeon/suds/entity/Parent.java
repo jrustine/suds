@@ -1,5 +1,6 @@
 package net.curmudgeon.suds.entity;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
  * limitations under the License.
  */
 @DynamoDbBean
-public class Parent {
+public class Parent implements Comparable<Parent> {
 	private String customerId;
 	private String id;
 	private String firstName;
@@ -95,6 +96,16 @@ public class Parent {
 	@DynamoDbIgnore
 	public void setPets(List<Pet> pets) {
 		this.pets = pets;
+	}
+
+	/**
+	 * Sort Parents by last name, then first name.
+	 */
+	@Override
+	public int compareTo(Parent parent0) {
+	    return Comparator.comparing(Parent::getLastName)
+	              .thenComparing(Parent::getFirstName)
+	              .compare(this, parent0);
 	}
 
 	public String toString() {

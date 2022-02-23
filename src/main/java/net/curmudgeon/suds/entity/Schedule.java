@@ -1,6 +1,7 @@
 package net.curmudgeon.suds.entity;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
@@ -24,7 +25,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
  * limitations under the License.
  */
 @DynamoDbBean
-public class Schedule {
+public class Schedule implements Comparable<Schedule> {
 	private String scheduleId;
 	private LocalDateTime appointmentTime;
 	private String groomerId;
@@ -71,6 +72,15 @@ public class Schedule {
 
 	public void setPetId(String petId) {
 		this.petId = petId;
+	}
+
+	/**
+	 * Sort Schedules by appointment time.
+	 */
+	@Override
+	public int compareTo(Schedule schedule0) {
+	    return Comparator.comparing(Schedule::getAppointmentTime)
+	              .compare(this, schedule0);
 	}
 
 	public String toString() {

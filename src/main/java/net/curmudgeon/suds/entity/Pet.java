@@ -1,5 +1,7 @@
 package net.curmudgeon.suds.entity;
 
+import java.util.Comparator;
+
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
@@ -22,7 +24,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
  * limitations under the License.
  */
 @DynamoDbBean
-public class Pet {
+public class Pet implements Comparable<Pet> {
 	private String customerId;
 	private String id;
 	private String phoneNumber;
@@ -80,6 +82,15 @@ public class Pet {
 
 	public void setNotes(String notes) {
 		this.notes = notes;
+	}
+
+	/**
+	 * Sort Pets by name.
+	 */
+	@Override
+	public int compareTo(Pet pet0) {
+	    return Comparator.comparing(Pet::getName)
+	              .compare(this, pet0);
 	}
 
 	public String toString() {
