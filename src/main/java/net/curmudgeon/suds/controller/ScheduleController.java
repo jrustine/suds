@@ -2,6 +2,7 @@ package net.curmudgeon.suds.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,15 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.curmudgeon.suds.controller.request.ScheduleRequest;
 import net.curmudgeon.suds.controller.response.CustomerResponse;
 import net.curmudgeon.suds.controller.response.GroomerResponse;
 import net.curmudgeon.suds.controller.response.PetResponse;
 import net.curmudgeon.suds.controller.response.ScheduleResponse;
 import net.curmudgeon.suds.entity.Groomer;
 import net.curmudgeon.suds.entity.Parent;
+import net.curmudgeon.suds.entity.Pet;
 import net.curmudgeon.suds.entity.Schedule;
 import net.curmudgeon.suds.repository.CustomerRepository;
 import net.curmudgeon.suds.repository.GroomerRepository;
@@ -52,6 +57,8 @@ public class ScheduleController {
 	
 	@Autowired
 	private ScheduleRepository scheduleRepository;
+	
+	private static DateTimeFormatter appointmentTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	
 	/**
 	 * Retrieves schedule entries between the specified start and end dates (inclusive).
@@ -127,6 +134,32 @@ public class ScheduleController {
 		return responses;
 	}
 
+	/**
+	 * Default path, saves schedule request. Sample posted JSON:
+	 * 
+	 *	{
+	 *		"appointmentTime": "2022-01-05 10:30",
+	 *		"employeeNumber" : "SUDS001",
+	 *		"phoneNumber": "(410) 123-1234",
+	 *		"petName" : "Fluffernutter"
+	 *	}
+	 */
+	@PostMapping(value="/", consumes="application/json")
+	public void saveSchedule(@RequestBody ScheduleRequest scheduleRequest) {
+
+		Groomer groomer = groomerRepository.getGroomerByEmployeeNumber(scheduleRequest.getEmployeeNumber());
+		Parent parent = customerRepository.getParentByPhoneNumber(scheduleRequest.getPhoneNumber());
+		Pet pet = customerRepository.getPetByPhoneNumberAndName(scheduleRequest.getPhoneNumber(), scheduleRequest.getPetName());
+		
+		Schedule schedule = new Schedule();
+		schedule.setAppointmentTime(LocalDateTime.parse(scheduleRequest.getAppointmentTime(), appointmentTimeFormatter));
+		schedule.setGroomerId(groomer.getGroomerId());
+		schedule.setCustomerId(parent.getCustomerId());
+		schedule.setPetId(pet.getId());
+		
+		scheduleRepository.saveSchedule(schedule);
+	}
+	
 	/**
 	 * Populate a response object from the Schedule entry.
 	 * 
