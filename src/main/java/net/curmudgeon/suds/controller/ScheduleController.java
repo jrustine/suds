@@ -6,6 +6,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.curmudgeon.suds.controller.exception.MissingRecordException;
 import net.curmudgeon.suds.controller.request.ScheduleRequest;
 import net.curmudgeon.suds.controller.response.CustomerResponse;
 import net.curmudgeon.suds.controller.response.GroomerResponse;
@@ -48,6 +51,7 @@ import net.curmudgeon.suds.repository.ScheduleRepository;
 @RestController
 @RequestMapping("schedule")
 public class ScheduleController {
+	private static final Logger log = LogManager.getLogger(ScheduleController.class);
 
 	@Autowired
 	private CustomerRepository customerRepository;
@@ -76,6 +80,7 @@ public class ScheduleController {
 		LocalDateTime endDateTime = endDate.atTime(23, 59);
 		
 		List<Schedule> schedules = scheduleRepository.getSchedule(startDateTime, endDateTime);
+		log.debug("found [" + schedules.size() + "] schedule entries");
 		List<ScheduleResponse> responses = new ArrayList<ScheduleResponse>();
 		schedules.stream().forEach(schedule -> responses.add(populateSchedule(schedule)));
 
@@ -97,6 +102,9 @@ public class ScheduleController {
 			@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate) {
 		
 		Groomer groomer = groomerRepository.getGroomerByEmployeeNumber(employeeNumber);
+		if (groomer == null) {
+			throw new MissingRecordException(employeeNumber);
+		}
 		
 		LocalDateTime startDateTime = startDate.atStartOfDay();
 		LocalDateTime endDateTime = endDate.atTime(23, 59);
@@ -123,6 +131,9 @@ public class ScheduleController {
 			@PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate endDate) {
 		
 		Parent parent = customerRepository.getParentByPhoneNumber(phoneNumber);
+		if (parent == null) {
+			throw new MissingRecordException(phoneNumber);
+		}
 		
 		LocalDateTime startDateTime = startDate.atStartOfDay();
 		LocalDateTime endDateTime = endDate.atTime(23, 59);
@@ -148,8 +159,19 @@ public class ScheduleController {
 	public void saveSchedule(@RequestBody ScheduleRequest scheduleRequest) {
 
 		Groomer groomer = groomerRepository.getGroomerByEmployeeNumber(scheduleRequest.getEmployeeNumber());
+		if (groomer == null) {
+			throw new MissingRecordException(scheduleRequest.getEmployeeNumber());
+		}
+
 		Parent parent = customerRepository.getParentByPhoneNumber(scheduleRequest.getPhoneNumber());
+		if (parent == null) {
+			throw new MissingRecordException(scheduleRequest.getPhoneNumber());
+		}
+		
 		Pet pet = customerRepository.getPetByPhoneNumberAndName(scheduleRequest.getPhoneNumber(), scheduleRequest.getPetName());
+		if (pet == null) {
+			throw new MissingRecordException(scheduleRequest.getPhoneNumber() + "/" + scheduleRequest.getPetName());
+		}
 		
 		Schedule schedule = new Schedule();
 		schedule.setAppointmentTime(LocalDateTime.parse(scheduleRequest.getAppointmentTime(), appointmentTimeFormatter));

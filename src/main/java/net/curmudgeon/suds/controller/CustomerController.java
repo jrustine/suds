@@ -2,6 +2,8 @@ package net.curmudgeon.suds.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.curmudgeon.suds.controller.exception.MissingRecordException;
 import net.curmudgeon.suds.entity.Parent;
 import net.curmudgeon.suds.entity.Pet;
 import net.curmudgeon.suds.repository.CustomerRepository;
@@ -34,6 +37,7 @@ import net.curmudgeon.suds.repository.CustomerRepository;
 @RestController
 @RequestMapping("customer")
 public class CustomerController {
+	private static final Logger log = LogManager.getLogger(CustomerController.class);
 	
 	@Autowired
 	private CustomerRepository customerRepository;
@@ -44,6 +48,7 @@ public class CustomerController {
 	@GetMapping(value="/", produces="application/json")
 	public List<Parent> getAllParents() {
 		List<Parent> parents = customerRepository.getAllParents();
+		log.debug("found [" + parents.size() + "] customers");
 		parents.stream().forEach(parent -> parent.setPets(customerRepository.getPetsForParent(parent.getPhoneNumber())));
 		return parents;
 	}
@@ -56,8 +61,11 @@ public class CustomerController {
 	@GetMapping(value="/{phoneNumber}", produces="application/json")
 	public Parent getParent(@PathVariable String phoneNumber) {
 		Parent parent = customerRepository.getParentByPhoneNumber(phoneNumber);
-		if (parent != null)
+		if (parent != null) {
 			parent.setPets(customerRepository.getPetsForParent(parent.getPhoneNumber()));
+		} else {
+			throw new MissingRecordException(phoneNumber);
+		}
 		return parent;
 	}
 
@@ -66,7 +74,9 @@ public class CustomerController {
 	 */
 	@GetMapping(value="/pets", produces="application/json")
 	public List<Pet> getAllPets() {
-		return customerRepository.getAllPets();
+		List<Pet> pets = customerRepository.getAllPets();
+		log.debug("found [" + pets.size() + "] pets");
+		return pets;
 	}
 
 	/**

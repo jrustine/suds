@@ -2,6 +2,8 @@ package net.curmudgeon.suds.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.curmudgeon.suds.controller.exception.MissingRecordException;
 import net.curmudgeon.suds.entity.Groomer;
 import net.curmudgeon.suds.repository.GroomerRepository;
 
@@ -33,6 +36,7 @@ import net.curmudgeon.suds.repository.GroomerRepository;
 @RestController
 @RequestMapping("groomer")
 public class GroomerController {
+	private static final Logger log = LogManager.getLogger(GroomerController.class);
 
 	@Autowired
 	private GroomerRepository groomerRepository;
@@ -42,7 +46,9 @@ public class GroomerController {
 	 */
 	@GetMapping(value="/", produces="application/json")
 	public List<Groomer> getAllGroomers() {
-		return groomerRepository.getAllGroomers();
+		List<Groomer> groomers = groomerRepository.getAllGroomers();
+		log.debug("found [" + groomers.size() + "] groomers");
+		return groomers;
 	}
 
 	/**
@@ -52,7 +58,11 @@ public class GroomerController {
 	 */
 	@GetMapping(value="/{employeeNumber}", produces="application/json")
 	public Groomer getGroomer(@PathVariable String employeeNumber) {
-		return groomerRepository.getGroomerByEmployeeNumber(employeeNumber);
+		Groomer groomer = groomerRepository.getGroomerByEmployeeNumber(employeeNumber);
+		if (groomer == null) {
+			throw new MissingRecordException(employeeNumber);
+		}
+		return groomer;
 	}
 	
 	/**

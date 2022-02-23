@@ -30,4 +30,5 @@ Just a silly dog grooming appointment application I created to play with Amazon'
 
 * Clearly not the best solution for this type of application, a relational database would have done just fine.
 * I ended up not using JPA because I wanted to be a little more hands on with the NoSQL stuff.
-* It's a little light on error handling and logging ("light" meaning none).
+* The Customer table demonstrates storing multiple kinds of objects using the same partition key.
+* The Groomer table demonstrates simple versioning.
