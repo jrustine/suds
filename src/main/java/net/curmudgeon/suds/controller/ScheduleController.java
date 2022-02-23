@@ -81,6 +81,9 @@ public class ScheduleController {
 		
 		List<Schedule> schedules = scheduleRepository.getSchedule(startDateTime, endDateTime);
 		log.debug("found [" + schedules.size() + "] schedule entries");
+		
+		// The actual schedule data only contains id information, use a response
+		// POJO to return more meaningful data.
 		List<ScheduleResponse> responses = new ArrayList<ScheduleResponse>();
 		schedules.stream().forEach(schedule -> responses.add(populateSchedule(schedule)));
 
@@ -110,6 +113,10 @@ public class ScheduleController {
 		LocalDateTime endDateTime = endDate.atTime(23, 59);
 		
 		List<Schedule> schedules = scheduleRepository.getScheduleForGroomer(groomer, startDateTime, endDateTime);
+		log.debug("found [" + schedules.size() + "] schedule entries for employee " + employeeNumber);
+
+		// The actual schedule data only contains id information, use a response
+		// POJO to return more meaningful data.
 		List<ScheduleResponse> responses = new ArrayList<ScheduleResponse>();
 		schedules.stream().forEach(schedule -> responses.add(populateSchedule(schedule)));
 
@@ -139,6 +146,10 @@ public class ScheduleController {
 		LocalDateTime endDateTime = endDate.atTime(23, 59);
 		
 		List<Schedule> schedules = scheduleRepository.getScheduleForParent(parent, startDateTime, endDateTime);
+		log.debug("found [" + schedules.size() + "] schedule entries for customer " + phoneNumber);
+
+		// The actual schedule data only contains id information, use a response
+		// POJO to return more meaningful data.
 		List<ScheduleResponse> responses = new ArrayList<ScheduleResponse>();
 		schedules.stream().forEach(schedule -> responses.add(populateSchedule(schedule)));
 
@@ -183,7 +194,9 @@ public class ScheduleController {
 	}
 	
 	/**
-	 * Populate a response object from the Schedule entry.
+	 * Populate a response object from the Schedule entry. Since we only store record
+	 * ids for a schedule entry, we populate a response object with expanded information
+	 * to be a little more user friendly.
 	 * 
 	 * @param schedule
 	 * @return populated ScheduleResponse

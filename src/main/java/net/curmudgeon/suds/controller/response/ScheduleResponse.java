@@ -17,7 +17,9 @@ import java.time.LocalDateTime;
  * See the License for the specific language governing permissions and 
  * limitations under the License.
  * 
- * POJO containing full information for a schedule entry.
+ * POJO containing full information for a schedule entry. Since the database
+ * just stores ids, this object allows us to return expanded information to 
+ * the user.
  */
 public class ScheduleResponse {
 	private String scheduleId;
