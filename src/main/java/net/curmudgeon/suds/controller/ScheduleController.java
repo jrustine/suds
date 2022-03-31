@@ -46,7 +46,7 @@ import net.curmudgeon.suds.repository.ScheduleRepository;
  * See the License for the specific language governing permissions and 
  * limitations under the License.
  * 
- * Controller for Groomer data.
+ * Controller for Schedule data.
  */
 @RestController
 @RequestMapping("schedule")
